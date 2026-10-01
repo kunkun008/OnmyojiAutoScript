@@ -155,14 +155,9 @@ def handle_adb_error(e):
         logger.error(e)
         return True
     else:
-        # AdbError()
-        logger.exception(e)
-        possible_reasons(
-            'If you are using BlueStacks or LD player or WSA, please enable ADB in the settings of your emulator',
-            'Emulator died, please restart emulator',
-            'Serial incorrect, no such device exists or emulator is not running'
-        )
-        return False
+        # AdbError() - allow retry so adb_reconnect can attempt recovery
+        logger.error(f'AdbError occurred: {e}')
+        return True
 
 
 def get_serial_pair(serial):

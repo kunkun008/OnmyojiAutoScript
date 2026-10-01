@@ -586,6 +586,7 @@ class Connection(ConnectionAttr):
         del_cached_property(self, 'droidcast_session')
         del_cached_property(self, 'minitouch_builder')
         del_cached_property(self, 'reverse_server')
+        del_cached_property(self, 'u2')
 
     def adb_restart(self):
         """

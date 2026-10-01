@@ -118,13 +118,31 @@ class Updater(DeployConfig, GitManager, PipManager):
 
     def execute_pull(self) -> bool:
         source = "origin"
-        for _ in range(3):
-            if self.execute(
-                    f'"{self.git}" pull {source} {self.Branch} --no-rebase', allow_failure=True
-            ):
-                break
-        else:
-            logger.warning("Git fetch failed")
+        stashed = False
+        try:
+            status = self.execute_output(f'"{self.git}" status --porcelain')
+            if status.strip():
+                logger.info("Local changes detected, stashing before pull...")
+                self.execute(f'"{self.git}" stash', allow_failure=True)
+                stashed = True
+
+            for _ in range(3):
+                if self.execute(
+                        f'"{self.git}" pull {source} {self.Branch} --no-rebase', allow_failure=True
+                ):
+                    break
+            else:
+                logger.warning("Git pull failed")
+                return False
+
+            if stashed:
+                logger.info("Restoring local changes via stash pop...")
+                self.execute(f'"{self.git}" stash pop', allow_failure=True)
+            return True
+        except Exception as e:
+            logger.error(f"Error during execute_pull: {e}")
+            if stashed:
+                self.execute(f'"{self.git}" stash pop', allow_failure=True)
             return False
 
 

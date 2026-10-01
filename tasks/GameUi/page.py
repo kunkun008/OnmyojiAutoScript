@@ -55,7 +55,7 @@ page_login = Page(G.I_CHECK_LOGIN_FORM)
 # Main Home 主页
 page_main = Page(G.I_CHECK_MAIN)
 page_main.additional = [G.I_AD_CLOSE_RED, G.I_BACK_FRIENDS, RestartAssets.I_CANCEL_BATTLE,
-                            GGA.I_CHAT_CLOSE_BUTTON, G.I_CLOSE_CHAT_WINDOW,
+                            GGA.I_CHAT_CLOSE_BUTTON, G.I_CLOSE_CHAT_WINDOW, G.I_CLEAN_VIEW_BACK,
                             [G.I_MAIN_GOTO_SHIKIGAMI_RECORDS, RestartAssets.C_LOGIN_SCROLL_CLOSE_AREA, True]]
 # 召唤summon
 page_summon = Page(G.I_CHECK_SUMMON)

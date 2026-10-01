@@ -252,9 +252,16 @@ class ScriptTask(StateMachine, GameUi, Battle, BaseActivity, SwitchSoul, Activit
         """
         logger.hr(f'Start run climb type BOSS')
 
-        self.ui_clicks([self.I_TO_BATTLE_BOSS],
-                       stop=self.I_CHECK_BATTLE_BOSS, interval=1)
-
+        timer = Timer(5).start()
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_CHECK_BATTLE_BOSS):
+                break
+            if self.appear_then_click(self.I_TO_BATTLE_BOSS, interval=1):
+                continue
+            if timer.reached():
+                logger.warning('Boss battle entrance not found or not open yet, skip boss')
+                return
 
         while 1:
             self.screenshot()

@@ -79,11 +79,22 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
         """
         select_best_demon = getattr(self.conf.best_demon_boss_config, f'{self.boss_type}_select', False)
         if select_best_demon:
-            group, team = getattr(self.conf.best_demon_soul_config, self.boss_type).split(",")
+            if not getattr(self.conf.best_demon_soul_config, 'enable', False):
+                return
+            group_team = getattr(self.conf.best_demon_soul_config, self.boss_type, None)
         else:
-            group, team = getattr(self.conf.demon_soul_config, self.boss_type).split(",")
+            if not getattr(self.conf.demon_soul_config, 'enable', False):
+                return
+            group_team = getattr(self.conf.demon_soul_config, self.boss_type, None)
+        if not group_team or ',' not in group_team:
+            return
+        group, team = group_team.split(",", 1)
+        group, team = group.strip(), team.strip()
         if group and team:
-            self.run_switch_soul_by_name(group, team)
+            if group.isdigit() and team.isdigit():
+                self.run_switch_soul((int(group), int(team)))
+            else:
+                self.run_switch_soul_by_name(group, team)
             return
         logger.error(f'Unknown switch soul conf: group[{group}], team[{team}]')
 

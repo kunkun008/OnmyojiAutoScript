@@ -36,7 +36,8 @@ class GameUi(BaseTask, GameUiAssets):
                 GameUiAssets.I_BACK_FRIENDS, GameUiAssets.I_BACK_DAILY,
                 GameUiAssets.I_REALM_RAID_GOTO_EXPLORATION,
                 GameUiAssets.I_SIX_GATES_GOTO_EXPLORATION, SixRealmsAssets.I_EXIT_SIXREALMS,
-                ActivityShikigamiAssets.I_SKIP_BUTTON, ActivityShikigamiAssets.I_RED_EXIT, BaseTask.I_UI_BACK_BLUE]
+                ActivityShikigamiAssets.I_SKIP_BUTTON, ActivityShikigamiAssets.I_RED_EXIT, BaseTask.I_UI_BACK_BLUE,
+                GameUiAssets.I_CLEAN_VIEW_BACK]
 
     def __init__(self, config, device):
         super().__init__(config, device)
@@ -223,7 +224,12 @@ class GameUi(BaseTask, GameUiAssets):
             path = path_dict.get(self.ui_current, None)
             # 找不到路径则重新获取页面重试
             if not path:
-                self.ui_get_current_page(skip_first_screenshot)
+                skip_first_screenshot = False
+                sleep(0.5)
+                self.ui_get_current_page(skip_first_screenshot=False)
+                if close_unknown_timer.reached_and_reset():
+                    self.try_close_unknown_page(skip_screenshot=False)
+                    self.ui_current = None
                 continue
             skip_first_screenshot = False
             logger.info(f"Current page: {self.ui_current}. Following shortest path:")

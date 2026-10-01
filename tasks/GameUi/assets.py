@@ -15,6 +15,8 @@ class GameUiAssets:
 	I_PAPER_DOLL_CLOSE = RuleImage(roi_front=(1253,102,25,62), roi_back=(1238,58,40,153), threshold=0.8, method="Template matching", file="./tasks/GameUi/additional/additional_paper_doll_close.png")
 	# description 
 	I_ACT_LIST_EXPAND = RuleImage(roi_front=(1191,508,30,25), roi_back=(1160,456,92,103), threshold=0.8, method="Template matching", file="./tasks/GameUi/additional/additional_act_list_expand.png")
+	# 庭院全景/展示模式返回按钮
+	I_CLEAN_VIEW_BACK = RuleImage(roi_front=(33,36,50,50), roi_back=(20,25,80,80), threshold=0.8, method="Template matching", file="./tasks/GameUi/additional/additional_clean_view_back.png")
 
 
 	# Ocr Rule Assets

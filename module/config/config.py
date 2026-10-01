@@ -186,7 +186,11 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
         for key, value in self.model.dict().items():
             func = Function(key, value)
             if not func.enable:
-                continue
+                # 异常恢复调用的 Restart 任务（即使用户关闭了定时重启，在异常唤醒时仍必须执行）
+                if key == 'restart' and isinstance(func.next_run, datetime) and func.next_run <= self.scheduler_update_dt:
+                    pass
+                else:
+                    continue
             if not isinstance(func.next_run, datetime):
                 error.append(func)
             elif func.next_run < self.scheduler_update_dt:
@@ -206,6 +210,11 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
                         pending_task.insert(0, pending_task.pop(i))
                         logger.info(f'{self.model.running_task} is running')
                         break
+            # 重启恢复任务具有最高优先权，必须置顶执行
+            for i, obj in enumerate(pending_task):
+                if obj.command == 'Restart':
+                    pending_task.insert(0, pending_task.pop(i))
+                    break
         if waiting_task:
             # waiting_task = f.apply(waiting_task)
             waiting_task = sorted(waiting_task, key=operator.attrgetter("next_run"))

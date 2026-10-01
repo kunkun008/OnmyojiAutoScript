@@ -61,7 +61,7 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
                 logger.info('Frog Boss Rest')
                 break
             # 竞猜成功
-            if self.appear(self.I_BET_SUCCESS):
+            if self.appear(self.I_BET_SUCCESS) or self.appear(self.I_BET_SUCCESS_BOX):
                 logger.info('You bet win')
                 self.record_oas_result()
                 self.detect()
@@ -77,7 +77,7 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
                         continue
                 continue
             # 竞猜失败
-            if self.appear(self.I_BET_FAILURE):
+            if self.appear(self.I_BET_FAILURE) or self.appear(self.I_NEXT_COMPETITION):
                 logger.info('You bet lose')
                 self.record_oas_result()
                 self.ui_click_until_disappear(self.I_NEXT_COMPETITION)

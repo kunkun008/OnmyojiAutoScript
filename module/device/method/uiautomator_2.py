@@ -6,6 +6,7 @@ from functools import wraps
 from json.decoder import JSONDecodeError
 from subprocess import list2cmdline
 
+import requests
 import uiautomator2 as u2
 from adbutils.errors import AdbError
 from lxml import etree
@@ -37,6 +38,12 @@ def retry(func):
                 break
             # When adb server was killed
             except ConnectionResetError as e:
+                logger.error(e)
+
+                def init():
+                    self.adb_reconnect()
+            # When uiautomator2 connection drops or timeouts
+            except (requests.ConnectionError, requests.Timeout) as e:
                 logger.error(e)
 
                 def init():

@@ -211,6 +211,7 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
         logger.info('Swipe to top of group')
 
         # 判断有无目标分组
+        last_down_text = ''
         while 1:
             self.screenshot()
             # 获取当前分组名
@@ -221,6 +222,11 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
             # 有则跳出检测
             if result and len(result) > 0:
                 break
+            now_down_text = str(text1)
+            if now_down_text == last_down_text:
+                logger.warning(f'Target group {groupName} not found after swiping to bottom')
+                break
+            last_down_text = now_down_text
             self.swipe(self.S_SS_GROUP_SWIPE_DOWN)
             sleep(1.5)
         logger.info('Swipe down to find target group')
